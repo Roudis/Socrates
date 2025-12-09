@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  scorates-app:
+    build:.
+    container_name: scorates_app
+    ports:
+      - "8000:8000"
+    volumes:
+      -./app:/app/app  # Hot reload for development
+      -./data:/app/data
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - CHROMA_DB_HOST=chroma-db
+      - CHROMA_DB_PORT=8000
+    depends_on:
+      - chroma-db
+    networks:
+      - scorates-net
+
+  chroma-db:
+    image: chromadb/chroma:latest
+    container_name: scorates_vector_db
+    ports:
+      - "8001:8000"
+    volumes:
+      - chroma-data:/chroma/chroma
+    networks:
+      - scorates-net
+
+volumes:
+  chroma-data:
+
+networks:
+  scorates-net:
+    driver: bridge
