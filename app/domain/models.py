@@ -1,0 +1,1 @@
+# Pydantic entities (StudyMaterial, Message)
