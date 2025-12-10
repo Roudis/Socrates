@@ -1,5 +1,6 @@
 import os
 import chainlit as cl
+from langchain_ollama import OllamaEmbeddings
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
@@ -17,7 +18,11 @@ OLLAMA_URL = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434")
 # Initialize Embedding Model
 # We use a robust multilingual model to handle Greek text effectively.
 # This runs locally within the app container.
-embedding_model = HuggingFaceEmbeddings(model_name="intfloat/multilingual-e5-large")
+# embedding_model = HuggingFaceEmbeddings(model_name="intfloat/multilingual-e5-large")
+embedding_model = OllamaEmbeddings(
+    model="nomic-embed-text",
+    base_url=OLLAMA_URL 
+)
 
 # Initialize Infrastructure Adapters
 chroma_adapter = ChromaAdapter(
