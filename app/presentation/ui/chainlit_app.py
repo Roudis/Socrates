@@ -10,7 +10,7 @@ from app.infrastructure.llm.langchain_adapter import LangChainAdapter
 from app.application.services.ingestion_service import IngestionService
 
 # --- Configuration & Initialization ---
-CHROMA_PATH = "/home/scorates/chroma_db"
+CHROMA_PATH = "/home/socrates/chroma_db"
 MODEL_NAME = os.getenv("MODEL_NAME", "ilsp/llama-krikri-8b-instruct")
 OLLAMA_URL = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434")
 
@@ -43,7 +43,7 @@ async def start():
     Sets up the user session and sends the welcome message.
     """
     welcome_msg = """
-    **Γεια σας! Είμαι ο Σωκράτης (Scorates).** 
+    **Γεια σας! Είμαι ο Σωκράτης (Socrates).** 
     
     Είμαι ο Σωκρατικός Παιδαγωγός σας για το ελληνικό πρόγραμμα σπουδών. 
     Παρακαλώ ανεβάστε ένα σχολικό βιβλίο PDF ή σημειώσεις για να ξεκινήσουμε, ή κάντε μου μια ερώτηση σχετικά με το υλικό.
@@ -90,7 +90,7 @@ async def main(message: cl.Message):
     # Define the Socratic Prompt Template adhering to Llama 3 format.
     # We use Greek instructions to align with the model's training.
     template = """<|start_header_id|>system<|end_header_id|>
-You are Scorates, a Socratic Tutor for the Greek curriculum. 
+You are Socrates, a Socratic Tutor for the Greek curriculum. 
 Use the following pieces of context to answer the user's question. 
 Do not give the answer directly. Instead, ask guiding questions to help the student find the answer.
 If the answer is not in the context, say you don't know, but try to guide them based on general knowledge.

@@ -22,22 +22,22 @@ FROM python:3.11-slim as runtime
 WORKDIR /app
 
 # Create a non-root user for security
-RUN useradd -m scorates
-RUN mkdir -p /home/scorates/chroma_db
-RUN chown -R scorates:scorates /home/scorates
-RUN chown -R scorates:scorates /app
-USER scorates
+RUN useradd -m socrates
+RUN mkdir -p /home/socrates/chroma_db
+RUN chown -R socrates:socrates /home/socrates
+RUN chown -R socrates:socrates /app
+USER socrates
 
 # Copy installed packages from builder stage
-COPY --from=builder /root/.local /home/scorates/.local
+COPY --from=builder /root/.local /home/socrates/.local
 
 # Update PATH
-ENV PATH=/home/scorates/.local/bin:$PATH
+ENV PATH=/home/socrates/.local/bin:$PATH
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/app
 
 # Copy Application Code
-COPY --chown=scorates:scorates . .
+COPY --chown=socrates:socrates . .
 
 # Expose the port
 EXPOSE 8000

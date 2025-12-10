@@ -2,17 +2,17 @@ version: '3.8'
 
 services:
   # The Application Service (Chainlit UI + RAG Backend)
-  scorates_app:
+  socrates_app:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-    container_name: scorates_app
+    container_name: socrates_app
     ports:
       - "8000:8000"
     volumes:
       - ../app:/app/app
       - ../data:/app/data
-      - chroma_storage:/home/scorates/chroma_db
+      - chroma_storage:/home/socrates/chroma_db
     environment:
       # Connect to the native Mac Ollama app instead of a container
       - OLLAMA_BASE_URL=http://host.docker.internal:11434
