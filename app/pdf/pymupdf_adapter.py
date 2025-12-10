@@ -3,13 +3,13 @@
 import fitz  # PyMuPDF
 import unicodedata
 from app.domain.ports import DocumentLoaderPort
-from langchain.docstore.document import Document
+from langchain_core.documents import Document
 from typing import List
 
 class PyMuPDFLoaderAdapter(DocumentLoaderPort):
     def load_pdf(self, file_path: str) -> List:
         doc = fitz.open(file_path)
-        documents =
+        documents = []
         
         for i, page in enumerate(doc):
             # Extract text with flags to handle whitespace correctly

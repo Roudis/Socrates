@@ -32,6 +32,7 @@ COPY --from=builder /root/.local /home/scorates/.local
 # Update PATH
 ENV PATH=/home/scorates/.local/bin:$PATH
 ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/app
 
 # Copy Application Code
 COPY --chown=scorates:scorates . .
