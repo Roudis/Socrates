@@ -23,6 +23,8 @@ WORKDIR /app
 
 # Create a non-root user for security
 RUN useradd -m scorates
+RUN mkdir -p /home/scorates/chroma_db
+RUN chown -R scorates:scorates /home/scorates
 RUN chown -R scorates:scorates /app
 USER scorates
 
