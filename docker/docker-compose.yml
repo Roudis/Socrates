@@ -11,13 +11,14 @@ services:
       # Persistent storage for models to avoid re-downloading on every restart
       - ollama_storage:/root/.ollama
     # GPU Configuration (NVIDIA)
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [ gpu ]
+    # GPU Configuration (NVIDIA) - Commented out for Apple Silicon check
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu] ]
     # Custom Command Logic:
     # 1. Start the server in the background.
     # 2. Wait briefly for socket initialization.
