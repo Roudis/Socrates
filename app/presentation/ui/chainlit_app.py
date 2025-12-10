@@ -1,7 +1,7 @@
 import os
 import chainlit as cl
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
 
 # Internal Imports - connecting the layers
