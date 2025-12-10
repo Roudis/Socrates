@@ -41,25 +41,29 @@ class IngestionService:
 
     async def process_file(self, file_path: str, metadata: Dict[str, Any] = None) -> int:
         """
-        Orchestrates the processing of a single PDF file.
+        Orchestrates the processing of a single PDF file asynchronously.
         
-        Args:
-            file_path: The absolute path to the temporary file on disk.
-            metadata: A dictionary of additional metadata (e.g., filename, uploader)
-                      to be attached to every chunk generated from this file.
-            
-        Returns:
-            int: The total number of chunks created and stored.
-            
-        Raises:
-            FileNotFoundError: If the provided path does not exist.
+        This method offloads the blocking file I/O and CPU-bound text splitting
+        to a separate thread to avoid blocking the main asyncio event loop.
+        """
+        import asyncio # Import locally to avoid top-level changes
+        loop = asyncio.get_running_loop()
+        # Execute the synchronous processing in a thread pool
+        return await loop.run_in_executor(
+            None, 
+            self._process_file_sync, 
+            file_path, 
+            metadata
+        )
+
+    def _process_file_sync(self, file_path: str, metadata: Dict[str, Any] = None) -> int:
+        """
+        Synchronous implementation of file processing.
         """
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"File not found at path: {file_path}")
 
         # 1. Load: Extract text from the PDF
-        # PyPDFLoader is a reliable choice for standard text-based PDFs.
-        # For OCR-heavy PDFs, an integration with 'unstructured' or Tesseract would be needed.
         loader = PyPDFLoader(file_path)
         raw_documents = loader.load()
 
@@ -71,10 +75,15 @@ class IngestionService:
         # 2. Split: Chunk the text
         chunks = self.text_splitter.split_documents(raw_documents)
 
-        # 3. Store: Persist to the vector database
+        # 3. Store: Persist to the vector database in batches
         # Chroma handles the embedding generation internally via the function passed to it.
+        # We batch to avoid overloading the Ollama embedding service (which can crash with too many synchronous requests).
+        BATCH_SIZE = 10
         if chunks:
-            self.vector_store.add_documents(chunks)
+            total_chunks = len(chunks)
+            for i in range(0, total_chunks, BATCH_SIZE):
+                batch = chunks[i : i + BATCH_SIZE]
+                self.vector_store.add_documents(batch)
 
         return len(chunks)
 
