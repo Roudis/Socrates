@@ -11,8 +11,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python Dependency Manager (using pip for simplicity here, but Poetry is recommended)
-COPY requirements.txt.
 # Install into a local directory that we can copy later
+COPY requirements.txt.
 RUN pip install --user --no-cache-dir -r requirements.txt
 
 # STAGE 2: Runtime
