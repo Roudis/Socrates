@@ -43,10 +43,10 @@ async def start():
     Sets up the user session and sends the welcome message.
     """
     welcome_msg = """
-    **Γεια σας! I am Scorates.** 
+    **Γεια σας! Είμαι ο Σωκράτης (Scorates).** 
     
-    I am your Socratic Tutor for the Greek curriculum. 
-    Please upload a PDF textbook or notes to begin, or ask me a question about the material.
+    Είμαι ο Σωκρατικός Παιδαγωγός σας για το ελληνικό πρόγραμμα σπουδών. 
+    Παρακαλώ ανεβάστε ένα σχολικό βιβλίο PDF ή σημειώσεις για να ξεκινήσουμε, ή κάντε μου μια ερώτηση σχετικά με το υλικό.
     """
     await cl.Message(content=welcome_msg).send()
     
@@ -67,7 +67,7 @@ async def main(message: cl.Message):
         # Filter for PDF files
         files = [file for file in message.elements if "pdf" in file.mime]
         if files:
-            msg = cl.Message(content=f"Processing {len(files)} file(s)...")
+            msg = cl.Message(content=f"Επεξεργασία {len(files)} αρχείου/ων...")
             await msg.send()
             
             total_chunks = 0
@@ -80,7 +80,7 @@ async def main(message: cl.Message):
                 )
                 total_chunks += chunks
             
-            await cl.Message(content=f"Ingestion complete. Added {total_chunks} chunks to the knowledge base.").send()
+            await cl.Message(content=f"Η διαδικασία ολοκληρώθηκε. Προστέθηκαν {total_chunks} τμήματα κειμένου στη βάση γνώσης.").send()
             
             # If the user only uploaded files and sent no text, return early.
             if not message.content:
@@ -136,7 +136,7 @@ Question: {question}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
             text_elements.append(
                 cl.Text(
                     content=source.page_content, 
-                    name=f"Source {idx+1} ({source_name})",
+                    name=f"Πηγή {idx+1} ({source_name})",
                     display="inline"
                 )
             )
