@@ -77,13 +77,27 @@ class IngestionService:
 
         # 3. Store: Persist to the vector database in batches
         # Chroma handles the embedding generation internally via the function passed to it.
-        # We batch to avoid overloading the Ollama embedding service (which can crash with too many synchronous requests).
-        BATCH_SIZE = 10 # Reduced to 1 for maximum stability with Ollama
+        # We batch strictly to 1 to minimize load on the local Ollama instance.
+        import time
+        BATCH_SIZE = 1 
         if chunks:
             total_chunks = len(chunks)
             for i in range(0, total_chunks, BATCH_SIZE):
                 batch = chunks[i : i + BATCH_SIZE]
-                self.vector_store.add_documents(batch)
+                
+                # Retry mechanism for unstable embedding service
+                max_retries = 3
+                for attempt in range(max_retries):
+                    try:
+                        self.vector_store.add_documents(batch)
+                        time.sleep(0.5) # Small buffer to let the server breathe
+                        break # Success, move to next batch
+                    except Exception as e:
+                        if attempt == max_retries - 1:
+                            print(f"Failed to ingest batch {i} after {max_retries} attempts: {e}")
+                            raise e
+                        print(f"Batch {i} failed (attempt {attempt+1}/{max_retries}), retrying in 2s... Error: {e}")
+                        time.sleep(2)
 
         return len(chunks)
 
