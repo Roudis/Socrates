@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install Python Dependency Manager (using pip for simplicity here, but Poetry is recommended)
 # Install into a local directory that we can copy later
-COPY requirements.txt.
+COPY requirements.txt .
 RUN pip install --user --no-cache-dir -r requirements.txt
 
 # STAGE 2: Runtime
@@ -33,7 +33,7 @@ ENV PATH=/home/scorates/.local/bin:$PATH
 ENV PYTHONUNBUFFERED=1
 
 # Copy Application Code
-COPY --chown=scorates:scorates..
+COPY --chown=scorates:scorates . .
 
 # Expose the port
 EXPOSE 8000

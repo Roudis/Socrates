@@ -17,7 +17,7 @@ services:
           devices:
             - driver: nvidia
               count: 1
-              capabilities: [gpu]
+              capabilities: [ gpu ]
     # Custom Command Logic:
     # 1. Start the server in the background.
     # 2. Wait briefly for socket initialization.
@@ -25,7 +25,7 @@ services:
     # 4. Wait indefinitely (keep container alive).
     entrypoint: /bin/sh
     command: -c "ollama serve & sleep 5 && ollama pull ilsp/llama-krikri-8b-instruct && wait"
-    
+
     # Robust Health Check
     healthcheck:
       # Uses the internal ollama binary to check responsiveness.
@@ -35,7 +35,7 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s # Give ample time for model loading
-    
+
     environment:
       - OLLAMA_KEEP_ALIVE=24h
       - OLLAMA_HOST=0.0.0.0
@@ -48,17 +48,17 @@ services:
 
   # The Application Service (Chainlit UI + RAG Backend)
   scorates_app:
-    build: 
-      context:..
+    build:
+      context: ..
       dockerfile: docker/Dockerfile
     container_name: scorates_app
     ports:
       - "8000:8000"
     volumes:
       # Mount source code for development (hot-reloading)
-      -../app:/app/app
+      - ../app:/app/app
       # Mount data directory for local PDFs
-      -../data:/app/data
+      - ../data:/app/data
       # Persist the Vector Database
       - chroma_storage:/app/chroma_db
     environment:
