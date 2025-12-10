@@ -30,7 +30,7 @@ llm_adapter = LangChainAdapter(
     model_name=MODEL_NAME,
     base_url=OLLAMA_URL,
     temperature=0.1, # Low temperature for groundedness
-    context_window=8192 # Matched to Docker config
+    context_window=4096 # Reduced to prevent OOM on standard Docker setups
 )
 
 # Initialize Application Service
