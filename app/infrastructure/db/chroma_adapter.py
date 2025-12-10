@@ -108,27 +108,28 @@ class ChromaAdapter:
         """
         Completely clears the database and resets the state.
         
-        This method is useful for development iterations or re-ingestion 
-        workflows where the curriculum has changed significantly.
+        This method uses the Chroma API to delete the collection, which is safer 
+        than filesystem removal when the process holds file locks.
         """
-        # Chroma's API has varied in how it handles deletion. 
-        # A filesystem-level removal offers the most robust 'hard reset'.
-        if os.path.exists(self.persist_directory):
-            # Attempt to release the internal client reference to avoid file locks
-            self._vector_store = None 
-            try:
-                shutil.rmtree(self.persist_directory)
-            except OSError as e:
-                print(f"Error removing persistence directory: {e}")
+        try:
+            # Delete the collection from Chroma (effectively verifying connection too)
+            self._vector_store.delete_collection()
             
-            # Re-initialize the client to create a fresh, empty database
-            try:
-                self._vector_store = Chroma(
+            # Re-initialize the client to create a fresh, empty collection
+            # This is necessary because delete_collection removes it entirely
+            self._vector_store = Chroma(
+                collection_name=self.collection_name,
+                embedding_function=self.embedding_function,
+                persist_directory=self.persist_directory
+            )
+            print("Successfully reset ChromaDB collection.")
+        except Exception as e:
+            print(f"Error resetting ChromaDB collection: {e}")
+            # If API reset fails, we might be in a bad state, but we attempt to ensure
+            # the vector_store object is at least valid for subsequent writes.
+            if self._vector_store is None:
+                 self._vector_store = Chroma(
                     collection_name=self.collection_name,
                     embedding_function=self.embedding_function,
                     persist_directory=self.persist_directory
                 )
-            except Exception as e:
-                # If re-init fails (e.g. race condition), log and retry or pass
-                print(f"Warning: Failed to re-initialize Chroma after reset: {e}")
-                pass
