@@ -10,7 +10,7 @@ from app.infrastructure.llm.langchain_adapter import LangChainAdapter
 from app.application.services.ingestion_service import IngestionService
 
 # --- Configuration & Initialization ---
-CHROMA_PATH = "/app/chroma_db"
+CHROMA_PATH = "/home/scorates/chroma_db"
 MODEL_NAME = os.getenv("MODEL_NAME", "ilsp/llama-krikri-8b-instruct")
 OLLAMA_URL = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434")
 

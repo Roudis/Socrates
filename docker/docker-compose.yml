@@ -61,7 +61,7 @@ services:
       # Mount data directory for local PDFs
       - ../data:/app/data
       # Persist the Vector Database
-      - chroma_storage:/app/chroma_db
+      - chroma_storage:/home/scorates/chroma_db
     environment:
       - OLLAMA_BASE_URL=http://ollama:11434
       - MODEL_NAME=ilsp/llama-krikri-8b-instruct
