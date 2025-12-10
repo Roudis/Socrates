@@ -1,52 +1,6 @@
 version: '3.8'
 
 services:
-  # The Inference Engine Service
-  ollama:
-    image: ollama/ollama:latest
-    container_name: scorates_ollama
-    ports:
-      - "11434:11434"
-    volumes:
-      # Persistent storage for models to avoid re-downloading on every restart
-      - ollama_storage:/root/.ollama
-    # GPU Configuration (NVIDIA)
-    # GPU Configuration (NVIDIA) - Commented out for Apple Silicon check
-    # deploy:
-    #   resources:
-    #     reservations:
-    #       devices:
-    #         - driver: nvidia
-    #           count: 1
-    #           capabilities: [gpu] ]
-    # Custom Command Logic:
-    # 1. Start the server in the background.
-    # 2. Wait briefly for socket initialization.
-    # 3. Pull the specific Greek model (Krikri).
-    # 4. Wait indefinitely (keep container alive).
-    entrypoint: /bin/sh
-    command: -c "ollama serve & sleep 5 && ollama pull ilsp/llama-krikri-8b-instruct && wait"
-
-    # Robust Health Check
-    healthcheck:
-      # Uses the internal ollama binary to check responsiveness.
-      # This avoids the 'missing curl' issue common in minimal Docker images.
-      test: [ "CMD", "ollama", "list" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s # Give ample time for model loading
-
-    environment:
-      - OLLAMA_KEEP_ALIVE=24h
-      - OLLAMA_HOST=0.0.0.0
-      # Critical: Allow context larger than the default 2048
-      # This environment variable sets the default for requests that don't specify it,
-      # but we also set it explicitly in the Python adapter.
-      - OLLAMA_NUM_CTX=4096
-      # Limit concurrency to prevent OOM on consumer GPUs
-      - OLLAMA_MAX_LOADED_MODELS=1
-
   # The Application Service (Chainlit UI + RAG Backend)
   scorates_app:
     build:
@@ -56,24 +10,21 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      # Mount source code for development (hot-reloading)
       - ../app:/app/app
-      # Mount data directory for local PDFs
       - ../data:/app/data
-      # Persist the Vector Database
       - chroma_storage:/home/scorates/chroma_db
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
+      # Connect to the native Mac Ollama app instead of a container
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
       - MODEL_NAME=ilsp/llama-krikri-8b-instruct
-      # Chainlit specific settings
       - CHAINLIT_HOST=0.0.0.0
       - CHAINLIT_PORT=8000
-    depends_on:
-      ollama:
-        condition: service_healthy
-    # Launch Chainlit
+
+    # This allows the container to see your Mac's localhost
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
     command: chainlit run app/presentation/ui/chainlit_app.py --host 0.0.0.0 --port 8000
 
 volumes:
-  ollama_storage:
   chroma_storage:
