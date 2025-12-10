@@ -23,6 +23,7 @@ WORKDIR /app
 
 # Create a non-root user for security
 RUN useradd -m scorates
+RUN chown -R scorates:scorates /app
 USER scorates
 
 # Copy installed packages from builder stage
