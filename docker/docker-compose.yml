@@ -30,7 +30,7 @@ services:
     healthcheck:
       # Uses the internal ollama binary to check responsiveness.
       # This avoids the 'missing curl' issue common in minimal Docker images.
-      test:
+      test: [ "CMD", "ollama", "list" ]
       interval: 30s
       timeout: 10s
       retries: 3

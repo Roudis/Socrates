@@ -128,7 +128,7 @@ Question: {question}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
     source_documents = res["source_documents"]
 
     # Format the Source Documents for the UI
-    text_elements =
+    text_elements = []
     if source_documents:
         for idx, source in enumerate(source_documents):
             source_name = source.metadata.get("source", "Unknown")
