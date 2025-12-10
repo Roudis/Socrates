@@ -78,7 +78,7 @@ class IngestionService:
         # 3. Store: Persist to the vector database in batches
         # Chroma handles the embedding generation internally via the function passed to it.
         # We batch to avoid overloading the Ollama embedding service (which can crash with too many synchronous requests).
-        BATCH_SIZE = 10
+        BATCH_SIZE = 10 # Reduced to 1 for maximum stability with Ollama
         if chunks:
             total_chunks = len(chunks)
             for i in range(0, total_chunks, BATCH_SIZE):

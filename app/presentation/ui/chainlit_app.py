@@ -47,6 +47,10 @@ async def start():
     Session Initialization Hook.
     Sets up the user session and sends the welcome message.
     """
+    # CLEAR DATABASE ON STARTUP
+    # User requested to wipe previous data on every new session.
+    chroma_adapter.reset()
+
     welcome_msg = """
     **Γεια σας! Είμαι ο Σωκράτης (Socrates).** 
     

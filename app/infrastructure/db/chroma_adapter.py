@@ -122,8 +122,13 @@ class ChromaAdapter:
                 print(f"Error removing persistence directory: {e}")
             
             # Re-initialize the client to create a fresh, empty database
-            self._vector_store = Chroma(
-                collection_name=self.collection_name,
-                embedding_function=self.embedding_function,
-                persist_directory=self.persist_directory
-            )
+            try:
+                self._vector_store = Chroma(
+                    collection_name=self.collection_name,
+                    embedding_function=self.embedding_function,
+                    persist_directory=self.persist_directory
+                )
+            except Exception as e:
+                # If re-init fails (e.g. race condition), log and retry or pass
+                print(f"Warning: Failed to re-initialize Chroma after reset: {e}")
+                pass

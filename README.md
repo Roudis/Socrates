@@ -1,4 +1,4 @@
-# Scorates: A Socratic AI Tutor for Greek Secondary Education
+# Socrates: A Socratic AI Tutor for Greek Secondary Education
 
 ![Python](https://img.shields.io/badge/Python-3.11%2B-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-green)
@@ -10,9 +10,9 @@
 
 ## Executive Summary
 
-**Scorates** is a study support application specifically engineered for the Greek secondary education system (Gymnasio and Lykeio). Unlike standard "answer engines" (like ChatGPT), Scorates is a **Digital Maieutic Engine**.
+**Socrates** is a study support application specifically engineered for the Greek secondary education system (Gymnasio and Lykeio). Unlike standard "answer engines" (like ChatGPT), Socrates is a **Digital Maieutic Engine**.
 
-Deriving its core philosophy from the Socratic method (*maieutikos*), the system is designed to "birth" knowledge from the student rather than delivering it. By integrating advanced **Retrieval-Augmented Generation (RAG)** architectures with a strictly constrained pedagogical persona, Scorates transforms the interaction from passive consumption to active inquiry.
+Deriving its core philosophy from the Socratic method (*maieutikos*), the system is designed to "birth" knowledge from the student rather than delivering it. By integrating advanced **Retrieval-Augmented Generation (RAG)** architectures with a strictly constrained pedagogical persona, Socrates transforms the interaction from passive consumption to active inquiry.
 
 This repository contains the comprehensive technical and pedagogical implementation, prioritizing **pedagogical integrity** over speed, **architectural cleanliness** over rapid prototyping, and **linguistic precision** for Modern Greek.
 
@@ -32,7 +32,7 @@ This repository contains the comprehensive technical and pedagogical implementat
 ## 1. Pedagogical Framework: The Digital Socratic Method
 
 ### 1.1 The Crisis of the "Answer Engine"
-Standard LLMs foster surface-level engagement by providing direct answers, bypassing the "desirable difficulty" required for deep learning. Scorates refuses to be an encyclopedia and insists on being a dialectic partner.
+Standard LLMs foster surface-level engagement by providing direct answers, bypassing the "desirable difficulty" required for deep learning. Socrates refuses to be an encyclopedia and insists on being a dialectic partner.
 
 ### 1.2 Maieutics: The Core Mechanics
 The system emulates three cognitive movements:
@@ -96,7 +96,7 @@ We implement **Clean Architecture** (Ports and Adapters) to segregate business l
 
 ### 5.1 Directory Structure
 ```text
-scorates/
+Socrates/
 ├── app/
 │   ├── domain/           # INNERMOST: Pure Business Logic
 │   ├── application/      # USE CASES: Orchestration
